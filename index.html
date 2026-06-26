@@ -1,0 +1,1477 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>Pixel Pop · Happy Birthday Alika</title>
+        <meta
+            name="description"
+            content="Tamagotchi pixel art — tekan tombolnya untuk kejutan ulang tahun Alika, 26·06·2026."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                /* Cangkang device */
+                --shell: #ff8fb1;
+                --shell-dark: #d76691;
+                --shell-light: #ffd0e1;
+                --shell-deep: #b84e79;
+                /* LCD (palet ala Game Boy, dihangatkan) */
+                --lcd: #9bbc4a;
+                --lcd-mid: #7aa03a;
+                --lcd-dark: #3a6020;
+                --lcd-ink: #14380f;
+                --bezel: #20232a;
+                --bezel-light: #34384a;
+                /* Pesta */
+                --party-pink: #ff6b9d;
+                --party-yellow: #ffd23f;
+                --party-cyan: #56d2ff;
+                --party-purple: #b388ff;
+                /* Latar */
+                --bg-top: #ffd9ec;
+                --bg-bot: #cdb4ff;
+                --ink: #5a3b5e;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                height: 100%;
+            }
+            body {
+                margin: 0;
+                min-height: 100dvh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 22px;
+                padding: 28px 16px 36px;
+                font-family: "VT323", monospace;
+                color: var(--ink);
+                background: #f3c4ee; /* fallback; ditimpa oleh #bg canvas */
+                overflow-x: hidden;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* ---- Latar dunia pixel (canvas penuh layar) ---- */
+            #bg {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                width: 100vw;
+                height: 100dvh;
+                pointer-events: none;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+            }
+
+            /* ---- Judul kecil ---- */
+            .eyebrow {
+                position: relative;
+                z-index: 2;
+                font-family: "Press Start 2P", monospace;
+                font-size: 11px;
+                letter-spacing: 1px;
+                color: #fff;
+                text-shadow:
+                    2px 2px 0 var(--shell-deep),
+                    4px 4px 0 #0002;
+                text-align: center;
+                line-height: 1.7;
+            }
+            .eyebrow b {
+                color: var(--party-yellow);
+            }
+
+            /* =========================================================
+     DEVICE
+  ========================================================= */
+            .device-wrap {
+                position: relative;
+                z-index: 2;
+            }
+
+            /* gantungan / keychain */
+            .keyloop {
+                width: 26px;
+                height: 26px;
+                margin: 0 auto -8px;
+                border: 6px solid var(--shell-dark);
+                border-radius: 50%;
+                background: transparent;
+            }
+
+            .device {
+                position: relative;
+                width: 300px;
+                max-width: 84vw;
+                padding: 20px 20px 34px;
+                border-radius: 48% 48% 47% 47% / 56% 56% 44% 44%;
+                background:
+                    radial-gradient(
+                        125% 70% at 50% 4%,
+                        #ff4f9c 0 12%,
+                        #ff4f9c00 42%
+                    ),
+                    radial-gradient(
+                        120% 80% at 30% 16%,
+                        var(--shell-light) 0 22%,
+                        #fff0 46%
+                    ),
+                    linear-gradient(
+                        160deg,
+                        var(--shell) 0%,
+                        var(--shell-dark) 100%
+                    );
+                box-shadow:
+                    inset 0 4px 0 #fff6,
+                    inset 0 -10px 18px var(--shell-deep),
+                    0 18px 0 var(--shell-deep),
+                    0 26px 40px #b84e7955;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            /* wajah oval putih dengan layar di tengah (gaya Tamagotchi) */
+            .face {
+                width: 86%;
+                padding: 12px 12px 16px;
+                border-radius: 50% / 44%;
+                background: radial-gradient(
+                    120% 95% at 50% 16%,
+                    #ffffff 0 56%,
+                    #ffe6f1 100%
+                );
+                box-shadow:
+                    inset 0 3px 6px #ffffff,
+                    inset 0 -12px 20px #f0cad9,
+                    0 2px 3px #0001;
+            }
+            .screen-frame {
+                position: relative;
+                padding: 8px;
+                border-radius: 16px;
+                background: linear-gradient(
+                    160deg,
+                    var(--bezel-light),
+                    var(--bezel)
+                );
+                box-shadow:
+                    inset 0 3px 8px #000a,
+                    0 1px 0 #fff8,
+                    0 2px 5px #0003;
+            }
+            .screen {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 4 / 3;
+                border-radius: 9px;
+                overflow: hidden;
+                background: var(--lcd);
+                box-shadow:
+                    inset 0 0 0 3px #0006,
+                    inset 0 0 22px #3a602055;
+            }
+            .screen canvas {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+            }
+            /* garis scanline tipis biar berasa LCD */
+            .screen::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                background: repeating-linear-gradient(
+                    180deg,
+                    #0000 0 3px,
+                    #0f380f10 3px 4px
+                );
+                mix-blend-mode: multiply;
+            }
+
+            /* teks overlay di dalam layar */
+            .screen-text {
+                position: absolute;
+                inset: 0;
+                z-index: 3;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 7px;
+                font-family: "Press Start 2P", monospace;
+                color: var(--lcd-ink);
+                text-align: center;
+                pointer-events: none;
+            }
+            /* prompt idle */
+            .prompt {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 9px;
+                z-index: 3;
+                font-family: "Press Start 2P", monospace;
+                font-size: 9px;
+                color: var(--lcd-ink);
+                text-align: center;
+                animation: blink 1s steps(1) infinite;
+            }
+            @keyframes blink {
+                50% {
+                    opacity: 0;
+                }
+            }
+
+            /* pesan ulang tahun */
+            .msg {
+                display: none;
+            }
+            .screen.is-party .msg {
+                display: flex;
+            }
+            .screen.is-party .prompt,
+            .screen.is-busy .prompt {
+                display: none;
+            }
+            .msg .l {
+                opacity: 0;
+                transform: translateY(6px) scale(0.8);
+            }
+            .screen.is-party .msg .l {
+                animation: pop 0.45s cubic-bezier(0.2, 1.4, 0.5, 1) forwards;
+            }
+            .msg .l1 {
+                font-size: 13px;
+                animation-delay: 0.05s;
+            }
+            .msg .l2 {
+                font-size: 13px;
+                animation-delay: 0.18s;
+            }
+            .msg .l3 {
+                font-size: 12px;
+                color: var(--lcd-dark);
+                animation-delay: 0.34s;
+            }
+            .msg .l4 {
+                font-size: 11px;
+                animation-delay: 0.5s;
+                letter-spacing: 1px;
+            }
+            .msg .l3 span {
+                color: var(--party-pink);
+            }
+            @keyframes pop {
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            /* ---- Logo merek di puncak cangkang ---- */
+            .logo {
+                margin: 2px 0 10px;
+                font-family: "Press Start 2P", monospace;
+                font-size: 11px;
+                letter-spacing: 1px;
+                color: #fff;
+                text-shadow:
+                    1px 1px 0 var(--shell-deep),
+                    2px 2px 0 #0002;
+            }
+
+            /* ---- Tombol tersusun melengkung (gaya Tamagotchi) ---- */
+            .buttons {
+                position: relative;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                gap: 22px;
+                margin-top: 16px;
+            }
+            .btn {
+                appearance: none;
+                border: 0;
+                cursor: pointer;
+                position: relative;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                --by: 0px;
+                transform: translateY(var(--by));
+                display: grid;
+                place-items: center;
+                font-family: "Press Start 2P", monospace;
+                font-size: 11px;
+                color: #fff;
+                text-shadow: 1px 1px 0 #8a1e34;
+                background:
+                    radial-gradient(
+                        120% 120% at 32% 26%,
+                        #ffd9df 0 16%,
+                        #fff0 40%
+                    ),
+                    linear-gradient(160deg, #ff6b80, #d63a55);
+                box-shadow:
+                    0 6px 0 #a32540,
+                    inset 0 2px 0 #fff7;
+                transition:
+                    transform 0.06s ease,
+                    box-shadow 0.06s ease;
+            }
+            .btn:active {
+                transform: translateY(calc(var(--by) + 5px));
+                box-shadow:
+                    0 1px 0 #a32540,
+                    inset 0 2px 0 #fff7;
+            }
+            .btn-l {
+                --by: 2px;
+            }
+            .btn-r {
+                --by: 2px;
+            }
+            .btn-main {
+                --by: 18px;
+                width: 56px;
+                height: 56px;
+                font-size: 13px;
+                background:
+                    radial-gradient(
+                        120% 120% at 32% 26%,
+                        #ffe0e6 0 14%,
+                        #fff0 36%
+                    ),
+                    linear-gradient(160deg, #ff5a73, #c22f4c);
+                box-shadow:
+                    0 8px 0 #92203a,
+                    inset 0 2px 0 #fff8,
+                    0 0 0 4px #ffffff66;
+            }
+            .btn-main:active {
+                transform: translateY(calc(var(--by) + 5px));
+                box-shadow:
+                    0 2px 0 #92203a,
+                    inset 0 2px 0 #fff8,
+                    0 0 0 4px #ffffff66;
+            }
+            .btn:focus-visible {
+                outline: 3px solid #fff;
+                outline-offset: 3px;
+            }
+            .btn .lbl {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: -19px;
+                font-size: 7px;
+                color: #fff;
+                text-shadow: 1px 1px 0 var(--shell-deep);
+                white-space: nowrap;
+            }
+
+            /* ---- caption ---- */
+            .caption {
+                position: relative;
+                z-index: 2;
+                max-width: 320px;
+                text-align: center;
+                font-size: 20px;
+                line-height: 1.25;
+                color: var(--ink);
+                margin-top: 6px;
+            }
+            .caption .heart {
+                color: var(--party-pink);
+            }
+            .sound-hint {
+                font-size: 15px;
+                opacity: 0.7;
+                margin-top: 2px;
+            }
+
+            /* =========================================================
+     RESPONSIF
+  ========================================================= */
+            /* ponsel umum */
+            @media (max-width: 480px) {
+                body {
+                    gap: 18px;
+                    padding: 22px 12px 30px;
+                }
+                .eyebrow {
+                    font-size: 10px;
+                }
+                .caption {
+                    font-size: 18px;
+                    max-width: 88vw;
+                }
+                .sound-hint {
+                    font-size: 14px;
+                }
+            }
+            /* ponsel sempit */
+            @media (max-width: 380px) {
+                .eyebrow {
+                    font-size: 9px;
+                }
+                .buttons {
+                    gap: 16px;
+                }
+                .btn {
+                    width: 46px;
+                    height: 46px;
+                }
+                .btn-main {
+                    width: 60px;
+                    height: 60px;
+                }
+            }
+            /* ponsel sangat kecil */
+            @media (max-width: 330px) {
+                .device {
+                    width: 94vw;
+                    max-width: 94vw;
+                    padding: 20px 16px 16px;
+                }
+                .buttons {
+                    gap: 12px;
+                }
+                .btn {
+                    width: 42px;
+                    height: 42px;
+                    font-size: 9px;
+                }
+                .btn-main {
+                    width: 54px;
+                    height: 54px;
+                }
+                .btn .lbl {
+                    bottom: -17px;
+                }
+            }
+            /* layar pendek (mis. ponsel landscape): rapatkan & mulai dari atas agar bisa di-scroll */
+            @media (max-height: 760px) {
+                body {
+                    justify-content: flex-start;
+                    gap: 14px;
+                    padding: 16px 12px 24px;
+                }
+                .keyloop {
+                    margin-bottom: -10px;
+                }
+            }
+            @media (max-height: 600px) {
+                body {
+                    gap: 10px;
+                    padding: 12px 12px 18px;
+                }
+                .keyloop {
+                    display: none;
+                }
+                .device {
+                    padding: 16px 18px 14px;
+                }
+                .eyebrow {
+                    display: none;
+                }
+                .caption {
+                    font-size: 16px;
+                    margin-top: 2px;
+                }
+                .sound-hint {
+                    display: none;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .btn {
+                    transition: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="bg" aria-hidden="true"></canvas>
+
+        <p class="eyebrow">PIXEL&nbsp;POP · <b>26·06·2026</b></p>
+
+        <div class="device-wrap">
+            <div class="keyloop" aria-hidden="true"></div>
+
+            <div class="device">
+                <div class="logo">PIXEL POP</div>
+
+                <div class="face">
+                    <div class="screen-frame">
+                        <div class="screen" id="screen">
+                            <canvas
+                                id="lcd"
+                                width="96"
+                                height="72"
+                                aria-hidden="true"
+                            ></canvas>
+
+                            <div class="prompt" id="prompt">▶ TEKAN&nbsp;B</div>
+
+                            <div class="screen-text msg" aria-live="polite">
+                                <span class="l l1">HAPPY</span>
+                                <span class="l l2">BIRTHDAY</span>
+                                <span class="l l3">ALIKA <span>♥</span></span>
+                                <span class="l l4">26·06·2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button
+                        class="btn btn-l"
+                        id="btnA"
+                        aria-label="Tombol A — ulangi animasi"
+                    >
+                        A
+                    </button>
+                    <button
+                        class="btn btn-main"
+                        id="btnB"
+                        aria-label="Tombol B — mulai kejutan"
+                    >
+                        B<span class="lbl">tekan!</span>
+                    </button>
+                    <button
+                        class="btn btn-r"
+                        id="btnC"
+                        aria-label="Tombol C — kembali"
+                    >
+                        C
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            (() => {
+                "use strict";
+
+                /* =========================================================
+     LATAR — dunia pixel ala layar Tamagotchi
+  ========================================================= */
+                const bg = document.getElementById("bg");
+                const bgx = bg.getContext("2d");
+                const bgReduce = window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                ).matches;
+                const SCALE = 6; // 1 piksel logis = 6px layar
+                let BW = 0,
+                    BH = 0; // ukuran logis canvas
+                const staticLayer = document.createElement("canvas");
+                const slx = staticLayer.getContext("2d");
+
+                /* -- helper pixel generik (terima ctx) -- */
+                function P(g, x, y, c, w = 1, h = 1) {
+                    g.fillStyle = c;
+                    g.fillRect(x | 0, y | 0, w, h);
+                }
+                function M(g, map, ox, oy, pal) {
+                    for (let r = 0; r < map.length; r++) {
+                        const row = map[r];
+                        for (let x = 0; x < row.length; x++) {
+                            const ch = row[x];
+                            if (ch !== "." && pal[ch])
+                                P(g, ox + x, oy + r, pal[ch]);
+                        }
+                    }
+                }
+                function ditherRow(g, y, a, b) {
+                    for (let x = 0; x < BW; x++)
+                        P(g, x, y, x % 2 === 0 ? a : b);
+                }
+
+                /* -- palet & sprite -- */
+                const SKY = [
+                    "#ffe1ef",
+                    "#ffd2ea",
+                    "#f7c6f1",
+                    "#e7bdff",
+                    "#d8b8ff",
+                ];
+                const CLOUD = [
+                    "....XXXX....",
+                    "..XXXXXXXX..",
+                    ".XXXXXXXXXX.",
+                    "XXXXXXXXXXXX",
+                    ".bbbbbbbbbb.",
+                ];
+                const CLOUD_PAL = { X: "#ffffff", b: "#f1ddf5" };
+                // Lapis pegunungan (cx & hw fraksi lebar, ph fraksi tinggi puncak, snow = garis salju)
+                const RANGES = [
+                    {
+                        baseY: 0.56,
+                        maxH: 0.3,
+                        body: "#cdb8f0",
+                        ridge: "#ddccf7",
+                        snow: 0,
+                        peaks: [
+                            { cx: 0.1, ph: 0.7, hw: 0.22 },
+                            { cx: 0.34, ph: 1.0, hw: 0.26 },
+                            { cx: 0.58, ph: 0.8, hw: 0.24 },
+                            { cx: 0.82, ph: 1.0, hw: 0.28 },
+                            { cx: 1.02, ph: 0.6, hw: 0.2 },
+                        ],
+                    },
+                    {
+                        baseY: 0.7,
+                        maxH: 0.3,
+                        body: "#b196e6",
+                        ridge: "#c4abf2",
+                        snow: 0.62,
+                        peaks: [
+                            { cx: 0.04, ph: 0.9, hw: 0.18 },
+                            { cx: 0.26, ph: 0.7, hw: 0.16 },
+                            { cx: 0.47, ph: 1.0, hw: 0.2 },
+                            { cx: 0.69, ph: 0.78, hw: 0.17 },
+                            { cx: 0.92, ph: 1.0, hw: 0.2 },
+                        ],
+                    },
+                    {
+                        baseY: 0.87,
+                        maxH: 0.28,
+                        body: "#8a6fd0",
+                        ridge: "#9d83e2",
+                        snow: 0.66,
+                        peaks: [
+                            { cx: -0.02, ph: 0.8, hw: 0.16 },
+                            { cx: 0.2, ph: 1.0, hw: 0.18 },
+                            { cx: 0.42, ph: 0.7, hw: 0.14 },
+                            { cx: 0.63, ph: 1.0, hw: 0.2 },
+                            { cx: 0.85, ph: 0.85, hw: 0.18 },
+                            { cx: 1.06, ph: 0.7, hw: 0.16 },
+                        ],
+                    },
+                ];
+
+                // Anak ayam kecil (aktivitas di tanah)
+                const CHICK = [".KKK.", "KYYYK", "KYYYK", "KYYYK", ".KKK."];
+                const CHICK_PAL = { K: "#3a2a1a", Y: "#ffd23f" };
+
+                /* -- bagian statis (digambar sekali ke offscreen) -- */
+                function drawSkyTo(g) {
+                    const h = BH / SKY.length;
+                    for (let i = 0; i < SKY.length; i++)
+                        P(
+                            g,
+                            0,
+                            Math.round(i * h),
+                            SKY[i],
+                            BW,
+                            Math.ceil(h) + 1,
+                        );
+                    for (let i = 1; i < SKY.length; i++) {
+                        const y = Math.round(i * h);
+                        ditherRow(g, y - 1, SKY[i - 1], SKY[i]);
+                        ditherRow(g, y, SKY[i], SKY[i - 1]);
+                    }
+                }
+                function drawSunTo(g) {
+                    const cx = Math.round(BW * 0.15),
+                        cy = Math.round(BH * 0.17),
+                        R = 5;
+                    for (const [dx, dy] of [
+                        [-8, 0],
+                        [8, 0],
+                        [0, -8],
+                        [0, 8],
+                        [-6, -6],
+                        [6, -6],
+                        [-6, 6],
+                        [6, 6],
+                    ])
+                        P(g, cx + dx, cy + dy, "#ffd98a");
+                    for (let yy = -R; yy <= R; yy++)
+                        for (let xx = -R; xx <= R; xx++)
+                            if (xx * xx + yy * yy <= R * R)
+                                P(g, cx + xx, cy + yy, "#ffe08a");
+                    for (let yy = -2; yy <= 2; yy++)
+                        for (let xx = -2; xx <= 2; xx++)
+                            if (xx * xx + yy * yy <= 5)
+                                P(g, cx + xx, cy + yy, "#fff4c6");
+                }
+                function ridgeY(peaks, baseY, maxH, x) {
+                    let h = 0;
+                    for (const p of peaks) {
+                        const cx = p.cx * BW,
+                            hw = p.hw * BW,
+                            d = Math.abs(x - cx);
+                        if (d < hw) h = Math.max(h, p.ph * maxH * (1 - d / hw));
+                    }
+                    return Math.round(baseY - h);
+                }
+                function drawMountainsTo(g) {
+                    for (const r of RANGES) {
+                        const baseY = BH * r.baseY,
+                            maxH = BH * r.maxH;
+                        const snowLine = r.snow
+                            ? Math.round(baseY - maxH * r.snow)
+                            : -1;
+                        for (let x = 0; x < BW; x++) {
+                            const y = ridgeY(r.peaks, baseY, maxH, x);
+                            const snowy = snowLine >= 0 && y < snowLine;
+                            P(g, x, y, snowy ? "#ffffff" : r.ridge); // garis punggungan
+                            P(g, x, y + 1, r.body, 1, BH - y); // isi badan gunung ke bawah
+                            if (snowy) {
+                                P(g, x, y + 1, "#ffffff");
+                                P(g, x, y + 2, "#f0eaff");
+                            }
+                        }
+                    }
+                }
+                function drawGroundDetailTo(g) {
+                    const y = BH - 2;
+                    let i = 0;
+                    for (let x = 2; x < BW - 2; x += 6 + (i % 3)) {
+                        P(g, x, y, "#7a5fc0");
+                        P(g, x + 1, y - 1, "#8f76d6");
+                        P(g, x + 2, y, "#7a5fc0");
+                        i++;
+                    }
+                }
+                function buildStatic() {
+                    staticLayer.width = BW;
+                    staticLayer.height = BH;
+                    drawSkyTo(slx);
+                    drawSunTo(slx);
+                    drawMountainsTo(slx);
+                    drawGroundDetailTo(slx);
+                }
+
+                /* -- bagian dinamis: awan, anak ayam, kunang-kunang -- */
+                let clouds = [],
+                    chicks = [],
+                    fireflies = [];
+                function initScene() {
+                    clouds = [
+                        { x: BW * 0.2, y: Math.round(BH * 0.1), s: 0.05 },
+                        { x: BW * 0.55, y: Math.round(BH * 0.07), s: 0.035 },
+                        { x: BW * 0.82, y: Math.round(BH * 0.14), s: 0.045 },
+                    ];
+                    chicks = [];
+                    const nc = Math.max(3, Math.round(BW / 60));
+                    for (let i = 0; i < nc; i++) {
+                        chicks.push({
+                            x: Math.random() * BW,
+                            y: BH - 6 - Math.round(Math.random() * 5),
+                            dir: Math.random() < 0.5 ? 1 : -1,
+                            sp: 0.1 + Math.random() * 0.1,
+                            ph: Math.random() * Math.PI * 2,
+                            turn: 120 + Math.random() * 240, // hitung mundur untuk balik arah acak
+                        });
+                    }
+                    fireflies = [];
+                    const nf = Math.max(6, Math.round(BW / 26));
+                    for (let i = 0; i < nf; i++) {
+                        fireflies.push({
+                            x: Math.random() * BW,
+                            y: BH * 0.58 + Math.random() * BH * 0.4,
+                            vy: 0.05 + Math.random() * 0.07,
+                            vx: (Math.random() * 2 - 1) * 0.05,
+                            ph: Math.random() * Math.PI * 2,
+                            col: Math.random() < 0.5 ? "#fff3b0" : "#cfe9ff",
+                        });
+                    }
+                }
+                function drawClouds(g, t) {
+                    for (const c of clouds) {
+                        if (!bgReduce) c.x += c.s;
+                        if (c.x > BW + 6) c.x = -14;
+                        M(g, CLOUD, Math.round(c.x), c.y, CLOUD_PAL);
+                    }
+                }
+                function drawChicks(g, t) {
+                    for (const c of chicks) {
+                        if (!bgReduce) {
+                            c.ph += 0.28;
+                            c.x += c.sp * c.dir;
+                            if (--c.turn <= 0) {
+                                c.dir *= -1;
+                                c.turn = 120 + Math.random() * 240;
+                            }
+                            if (c.x < 2) {
+                                c.x = 2;
+                                c.dir = 1;
+                            }
+                            if (c.x > BW - 7) {
+                                c.x = BW - 7;
+                                c.dir = -1;
+                            }
+                        }
+                        const hop = bgReduce
+                            ? 0
+                            : Math.round(Math.abs(Math.sin(c.ph)) * 1.6);
+                        const ox = Math.round(c.x),
+                            oy = Math.round(c.y) - hop;
+                        M(g, CHICK, ox, oy, CHICK_PAL);
+                        P(g, c.dir > 0 ? ox + 3 : ox + 1, oy + 1, "#3a2a1a"); // mata
+                        P(g, c.dir > 0 ? ox + 5 : ox - 1, oy + 2, "#ff7a3d"); // paruh
+                        P(g, ox + 1, oy + 5, "#3a2a1a");
+                        P(g, ox + 3, oy + 5, "#3a2a1a"); // kaki
+                    }
+                }
+                function drawFireflies(g, t) {
+                    for (const f of fireflies) {
+                        if (!bgReduce) {
+                            f.y -= f.vy;
+                            f.x += f.vx;
+                            f.ph += 0.06;
+                        }
+                        if (f.y < BH * 0.52) {
+                            f.y = BH - 2;
+                            f.x = Math.random() * BW;
+                        }
+                        const tw = Math.sin(f.ph) * 0.5 + 0.5;
+                        if (tw > 0.3) {
+                            P(g, Math.round(f.x), Math.round(f.y), f.col);
+                            if (tw > 0.82) {
+                                g.globalAlpha = 0.4;
+                                P(
+                                    g,
+                                    Math.round(f.x) - 1,
+                                    Math.round(f.y),
+                                    f.col,
+                                );
+                                P(
+                                    g,
+                                    Math.round(f.x) + 1,
+                                    Math.round(f.y),
+                                    f.col,
+                                );
+                                P(
+                                    g,
+                                    Math.round(f.x),
+                                    Math.round(f.y) - 1,
+                                    f.col,
+                                );
+                                g.globalAlpha = 1;
+                            }
+                        }
+                    }
+                }
+
+                function resizeBG() {
+                    BW = Math.max(40, Math.ceil(window.innerWidth / SCALE));
+                    BH = Math.max(40, Math.ceil(window.innerHeight / SCALE));
+                    bg.width = BW;
+                    bg.height = BH;
+                    buildStatic();
+                    initScene();
+                }
+                resizeBG();
+                let rt;
+                window.addEventListener("resize", () => {
+                    clearTimeout(rt);
+                    rt = setTimeout(resizeBG, 150);
+                });
+
+                function bgLoop(now) {
+                    bgx.drawImage(staticLayer, 0, 0);
+                    drawClouds(bgx, now);
+                    drawFireflies(bgx, now);
+                    drawChicks(bgx, now);
+                    requestAnimationFrame(bgLoop);
+                }
+                requestAnimationFrame(bgLoop);
+
+                /* ---------- Canvas / LCD ---------- */
+                const cv = document.getElementById("lcd");
+                const ctx = cv.getContext("2d");
+                const COLS = cv.width,
+                    ROWS = cv.height;
+                const reduceMotion = window.matchMedia(
+                    "(prefers-reduced-motion: reduce)",
+                ).matches;
+
+                const C = {
+                    K: "#2a2a2a",
+                    Y: "#ffd23f",
+                    O: "#f3a712",
+                    W: "#ffffff",
+                    B: "#20232a",
+                    R: "#ff7a3d",
+                    P: "#ff9ec7",
+                    M: "#ff5fa2",
+                    S: "#56d2ff",
+                    w: "#fff4d6",
+                    b: "#c98a5e",
+                    k: "#cacfd8",
+                    A: "#ffcf4d",
+                    c: "#ff7a9c",
+                    g: "#7aa03a",
+                    V: "#9b5de5",
+                    v: "#6f3fc0",
+                    m: "#37206b",
+                    f: "#ffffff",
+                };
+
+                // Burung — mata terbuka
+                const BIRD_OPEN = [
+                    "....KKKKKK....",
+                    "..KKYYYYYYKK..",
+                    ".KYYYYYYYYYYK.",
+                    ".KYWWYYYYWWYK.",
+                    ".KYWBYYYYWBYK.",
+                    ".KYWWYYYYWWYK.",
+                    ".KYYYYRRYYYYK.",
+                    ".KYPYRRRRYPYK.",
+                    ".KYPYYYYYYPYK.",
+                    ".KYYYYYYYYYYK.",
+                    ".KYYOOOOOOYYK.",
+                    "..KKYOOOOYKK..",
+                    "....KKKKKK....",
+                    "...K......K...",
+                    "..KK......KK..",
+                ];
+                // Burung — mata berkedip
+                const BIRD_BLINK = [
+                    "....KKKKKK....",
+                    "..KKYYYYYYKK..",
+                    ".KYYYYYYYYYYK.",
+                    ".KYYYYYYYYYYK.",
+                    ".KYKKYYYYKKYK.",
+                    ".KYYYYYYYYYYK.",
+                    ".KYYYYRRYYYYK.",
+                    ".KYPYRRRRYPYK.",
+                    ".KYPYYYYYYPYK.",
+                    ".KYYYYYYYYYYK.",
+                    ".KYYOOOOOOYYK.",
+                    "..KKYOOOOYKK..",
+                    "....KKKKKK....",
+                    "...K......K...",
+                    "..KK......KK..",
+                ];
+                // Topi pesta
+                const HAT = [
+                    "......WW......",
+                    "......WW......",
+                    ".....KMMK.....",
+                    "....KMSSMK....",
+                    "...KMMSSMMK...",
+                    "..KMSSMMSSMK..",
+                    ".KMMSSMMSSMMK.",
+                    "KKKKKKKKKKKKKK",
+                ];
+                // Kue + lilin
+                const CAKE = [
+                    "...A...",
+                    "...c...",
+                    ".wwwww.",
+                    "kbbbbbk",
+                    "kbbbbbk",
+                    "kkkkkkk",
+                ];
+                // Burung — frame jalan (kaki bergantian)
+                const BIRD_WALK1 = [
+                    "....KKKKKK....",
+                    "..KKYYYYYYKK..",
+                    ".KYYYYYYYYYYK.",
+                    ".KYWWYYYYWWYK.",
+                    ".KYWBYYYYWBYK.",
+                    ".KYWWYYYYWWYK.",
+                    ".KYYYYRRYYYYK.",
+                    ".KYPYRRRRYPYK.",
+                    ".KYPYYYYYYPYK.",
+                    ".KYYYYYYYYYYK.",
+                    ".KYYOOOOOOYYK.",
+                    "..KKYOOOOYKK..",
+                    "....KKKKKK....",
+                    "..KK......K...",
+                    ".KK.......KK..",
+                ];
+                const BIRD_WALK2 = [
+                    "....KKKKKK....",
+                    "..KKYYYYYYKK..",
+                    ".KYYYYYYYYYYK.",
+                    ".KYWWYYYYWWYK.",
+                    ".KYWBYYYYWBYK.",
+                    ".KYWWYYYYWWYK.",
+                    ".KYYYYRRYYYYK.",
+                    ".KYPYRRRRYPYK.",
+                    ".KYPYYYYYYPYK.",
+                    ".KYYYYYYYYYYK.",
+                    ".KYYOOOOOOYYK.",
+                    "..KKYOOOOYKK..",
+                    "....KKKKKK....",
+                    "...K......KK..",
+                    "..KK.......KK.",
+                ];
+                // Musuh — slime ungu
+                const ENEMY = [
+                    "....KKKKKK....",
+                    "..KKVVVVVVKK..",
+                    ".KVVVVVVVVVVK.",
+                    ".KVWBVVVVWBVK.",
+                    ".KVWWVVVVWWVK.",
+                    ".KVVVVVVVVVVK.",
+                    ".KVVmmmmmmVVK.",
+                    ".KVVmffffmVVK.",
+                    ".KVVVVVVVVVVK.",
+                    ".KvVvVvVvVvVK.",
+                    "..KKKKKKKKKK..",
+                ];
+
+                function px(x, y, color, size = 1) {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(x | 0, y | 0, size, size);
+                }
+                function sprite(map, ox, oy) {
+                    for (let r = 0; r < map.length; r++) {
+                        const row = map[r];
+                        for (let x = 0; x < row.length; x++) {
+                            const ch = row[x];
+                            if (ch !== "." && C[ch]) px(ox + x, oy + r, C[ch]);
+                        }
+                    }
+                }
+                function spriteTint(map, ox, oy, color) {
+                    for (let r = 0; r < map.length; r++) {
+                        const row = map[r];
+                        for (let x = 0; x < row.length; x++) {
+                            if (row[x] !== ".") px(ox + x, oy + r, color);
+                        }
+                    }
+                }
+
+                /* ---------- State & animasi ---------- */
+                let mode = "idle"; // "idle" | "battle" | "party"
+                let t0 = performance.now(); // waktu mulai mode aktif
+                let confetti = [];
+                let notes = [];
+                let deathFx = []; // partikel saat musuh kalah
+
+                // status pertarungan
+                let bHits = 0; // pukulan yang sudah kena
+                let bFlashUntil = 0; // musuh berkedip putih sampai waktu ini (ms)
+                let bDeathSpawned = false; // ledakan kematian sudah dibuat?
+                let bPartyTriggered = false; // sudah lanjut ke pesta?
+                // jadwal (ms sejak pertarungan mulai)
+                const B_WALK_END = 1200,
+                    B_READY = 1550,
+                    B_CYC = 470,
+                    B_HITS = 3;
+                const B_FIGHT_END = B_READY + B_HITS * B_CYC; // selesai memukul
+                const B_DEATH_END = B_FIGHT_END + 700; // selesai animasi kalah
+                const lerp = (a, b, p) => a + (b - a) * p;
+
+                function spawnConfetti(burst) {
+                    const cols = [C.M, C.Y, C.S, C.P, "#b388ff", "#7CFC9A"];
+                    for (let i = 0; i < (burst ? 50 : 1); i++) {
+                        confetti.push({
+                            x: burst
+                                ? COLS / 2 + (Math.random() * 30 - 15)
+                                : Math.random() * COLS,
+                            y: burst
+                                ? ROWS / 2 - 6 + (Math.random() * 10 - 5)
+                                : -2,
+                            vx: (Math.random() * 2 - 1) * (burst ? 0.9 : 0.25),
+                            vy: burst
+                                ? -(Math.random() * 1.4 + 0.4)
+                                : Math.random() * 0.5 + 0.25,
+                            g: 0.04 + Math.random() * 0.03,
+                            col: cols[(Math.random() * cols.length) | 0],
+                            size: Math.random() < 0.4 ? 2 : 1,
+                        });
+                    }
+                }
+
+                function drawConfetti() {
+                    for (const p of confetti) {
+                        if (!reduceMotion) {
+                            p.vy += p.g;
+                            p.x += p.vx;
+                            p.y += p.vy;
+                        }
+                        px(p.x, p.y, p.col, p.size);
+                    }
+                    confetti = confetti.filter(
+                        (p) => p.y < ROWS + 4 && confetti.length < 220,
+                    );
+                    // jaga supaya hujan confetti terus turun pelan saat party
+                    if (
+                        mode === "party" &&
+                        !reduceMotion &&
+                        Math.random() < 0.6
+                    )
+                        spawnConfetti(false);
+                }
+
+                function drawNotes() {
+                    for (const n of notes) {
+                        if (!reduceMotion) {
+                            n.y -= 0.35;
+                            n.life -= 1;
+                            n.x += Math.sin(n.y / 6) * 0.3;
+                        }
+                        if (n.life > 0) {
+                            const col =
+                                n.life > 14
+                                    ? C.lcd_dark || "#3a6020"
+                                    : "#3a6020";
+                            // not balok mini ~3x4
+                            px(n.x, n.y, "#1f4d12", 1);
+                            px(n.x + 1, n.y, "#1f4d12", 1);
+                            px(n.x + 1, n.y + 1, "#1f4d12", 1);
+                            px(n.x + 1, n.y + 2, "#1f4d12", 1);
+                            px(n.x, n.y + 3, "#1f4d12", 2);
+                        }
+                    }
+                    notes = notes.filter((n) => n.life > 0);
+                    if (
+                        mode === "party" &&
+                        !reduceMotion &&
+                        Math.random() < 0.04
+                    ) {
+                        notes.push({
+                            x: 20 + Math.random() * 56,
+                            y: 30,
+                            life: 36,
+                        });
+                    }
+                }
+
+                function spawnDeathFx(cx, cy) {
+                    const cols = [C.V, C.v, "#ffffff", C.M, C.S];
+                    for (let i = 0; i < 28; i++) {
+                        const a = Math.random() * Math.PI * 2,
+                            sp = Math.random() * 1.5 + 0.3;
+                        deathFx.push({
+                            x: cx,
+                            y: cy,
+                            vx: Math.cos(a) * sp,
+                            vy: Math.sin(a) * sp - 0.4,
+                            g: 0.05,
+                            col: cols[(Math.random() * cols.length) | 0],
+                            life: 30 + Math.random() * 14,
+                            size: Math.random() < 0.4 ? 2 : 1,
+                        });
+                    }
+                }
+                function drawDeathFx() {
+                    for (const p of deathFx) {
+                        if (!reduceMotion) {
+                            p.vy += p.g;
+                            p.x += p.vx;
+                            p.y += p.vy;
+                            p.life--;
+                        }
+                        if (p.life > 0) px(p.x, p.y, p.col, p.size);
+                    }
+                    deathFx = deathFx.filter((p) => p.life > 0);
+                }
+
+                function drawGround() {
+                    ctx.fillStyle = "#a9c95a";
+                    ctx.fillRect(0, 0, COLS, ROWS);
+                    ctx.fillStyle = "#8fb348";
+                    ctx.fillRect(0, ROWS - 12, COLS, 12);
+                    ctx.fillStyle = "#7aa03a";
+                    ctx.fillRect(0, ROWS - 12, COLS, 1);
+                    px(12, 12, "#b9d97a", 2);
+                    px(78, 16, "#b9d97a", 2);
+                    px(60, 8, "#b9d97a", 1);
+                }
+
+                function drawBattle(now) {
+                    const tb = now - t0;
+                    const baseY = ROWS - 30; // posisi Y burung
+                    const enemyX = 64,
+                        enemyY = ROWS - 26; // musuh di kanan
+                    const walkFrame =
+                        Math.floor(tb / 130) % 2 === 0
+                            ? BIRD_WALK1
+                            : BIRD_WALK2;
+
+                    // gerak burung: jalan → siap → memukul → menang melompat
+                    let bx,
+                        drawBird = BIRD_OPEN,
+                        lunge = 0,
+                        hop = 0;
+                    if (tb < B_WALK_END) {
+                        bx = Math.round(lerp(16, 40, tb / B_WALK_END));
+                        drawBird = reduceMotion ? BIRD_OPEN : walkFrame;
+                    } else {
+                        bx = 40;
+                        if (tb >= B_READY && tb < B_FIGHT_END) {
+                            const into = tb - B_READY,
+                                k = Math.floor(into / B_CYC),
+                                ph = (into - k * B_CYC) / B_CYC;
+                            if (ph < 0.4)
+                                lunge = Math.round(
+                                    Math.sin((ph / 0.4) * Math.PI) * 11,
+                                ); // maju lalu mundur
+                        }
+                        if (tb >= B_FIGHT_END)
+                            hop = reduceMotion
+                                ? 0
+                                : Math.abs(Math.round(Math.sin(tb / 120) * 3));
+                    }
+
+                    // daftarkan pukulan yang seharusnya sudah kena (sekali per pukulan)
+                    if (tb >= B_READY && tb < B_FIGHT_END) {
+                        let expected = 0;
+                        for (let k = 0; k < B_HITS; k++)
+                            if (tb >= B_READY + k * B_CYC + 0.22 * B_CYC)
+                                expected++;
+                        while (bHits < expected) {
+                            bHits++;
+                            bFlashUntil = now + 95;
+                            sfx(620 + bHits * 70, 0.07, 0.14);
+                        }
+                    }
+
+                    // musuh: idle → kena pukul (kedip putih + mundur) → kalah (kedip cepat → meledak)
+                    const dying = tb >= B_FIGHT_END;
+                    let enemyVisible = true,
+                        enemyShift = 0,
+                        flash = now < bFlashUntil;
+                    if (flash && bHits > 0) enemyShift = 3;
+                    if (dying) {
+                        const dt = tb - B_FIGHT_END;
+                        if (dt < 280) {
+                            flash = Math.floor(dt / 60) % 2 === 0;
+                        } else {
+                            if (!bDeathSpawned) {
+                                bDeathSpawned = true;
+                                spawnDeathFx(enemyX + 7, enemyY + 5);
+                                sfx(330, 0.18, 0.14, "sawtooth");
+                                sfx(170, 0.24, 0.12, "sawtooth");
+                            }
+                            enemyVisible = false;
+                        }
+                    }
+                    if (enemyVisible) {
+                        if (flash)
+                            spriteTint(
+                                ENEMY,
+                                enemyX + enemyShift,
+                                enemyY,
+                                "#ffffff",
+                            );
+                        else {
+                            const wob = reduceMotion
+                                ? 0
+                                : Math.round(Math.sin(tb / 160) * 1);
+                            sprite(ENEMY, enemyX + enemyShift, enemyY + wob);
+                        }
+                    }
+
+                    // burung
+                    sprite(drawBird, bx + lunge, baseY - hop);
+
+                    // percikan saat memukul
+                    if (flash && !dying && bHits > 0) {
+                        const sxp = bx + lunge + 14,
+                            syp = baseY + 6;
+                        px(sxp, syp, "#fff3b0");
+                        px(sxp + 1, syp - 2, "#ffd23f");
+                        px(sxp + 2, syp + 1, "#ffffff");
+                        px(sxp - 1, syp + 3, "#ffd23f");
+                    }
+
+                    drawDeathFx();
+
+                    // selesai → lanjut pesta + pesan ulang tahun
+                    if (tb >= B_DEATH_END && !bPartyTriggered) {
+                        bPartyTriggered = true;
+                        goParty();
+                    }
+                }
+
+                function drawScene(now) {
+                    const t = now - t0;
+                    ctx.clearRect(0, 0, COLS, ROWS);
+                    drawGround();
+
+                    if (mode === "battle") {
+                        drawBattle(now);
+                        return;
+                    }
+
+                    const bob = reduceMotion
+                        ? 0
+                        : Math.round(Math.sin(t / 320) * 2);
+                    const birdX = COLS / 2 - 7; // burung lebar 14
+                    const birdY = ROWS - 30 + bob; // berdiri di atas tanah
+
+                    if (mode === "party") {
+                        // burung & topi disembunyikan agar pesan ulang tahun terbaca jelas
+                        sprite(CAKE, COLS - 18, ROWS - 18);
+                        if (!reduceMotion && Math.floor(t / 180) % 2 === 0)
+                            px(COLS - 18 + 3, ROWS - 18, "#fff3b0", 1);
+                        drawNotes();
+                        drawConfetti();
+                        if (deathFx.length) drawDeathFx();
+                    } else {
+                        const blink = t % 2600 > 2480;
+                        sprite(blink ? BIRD_BLINK : BIRD_OPEN, birdX, birdY);
+                        if (confetti.length) drawConfetti();
+                    }
+                }
+
+                function loop(now) {
+                    drawScene(now);
+                    requestAnimationFrame(loop);
+                }
+                requestAnimationFrame(loop);
+
+                /* ---------- Audio (WebAudio) ---------- */
+                let actx = null;
+                function ensureAudio() {
+                    try {
+                        actx =
+                            actx ||
+                            new (
+                                window.AudioContext || window.webkitAudioContext
+                            )();
+                        if (actx.state === "suspended") actx.resume();
+                    } catch (e) {
+                        actx = null;
+                    }
+                    return actx;
+                }
+                function tone(freq, start, dur, vol = 0.16, type = "square") {
+                    if (!actx) return;
+                    const o = actx.createOscillator(),
+                        g = actx.createGain();
+                    o.type = type;
+                    o.frequency.value = freq;
+                    o.connect(g);
+                    g.connect(actx.destination);
+                    const tt = actx.currentTime + start;
+                    g.gain.setValueAtTime(0.0001, tt);
+                    g.gain.exponentialRampToValueAtTime(vol, tt + 0.01);
+                    g.gain.exponentialRampToValueAtTime(0.0001, tt + dur);
+                    o.start(tt);
+                    o.stop(tt + dur + 0.02);
+                }
+                function sfx(freq, dur, vol = 0.14, type = "square") {
+                    ensureAudio();
+                    tone(freq, 0, dur, vol, type);
+                }
+                function playJingle() {
+                    if (!ensureAudio()) return;
+                    const N = {
+                        G3: 196,
+                        C4: 261.63,
+                        D4: 293.66,
+                        E4: 329.63,
+                        F4: 349.23,
+                        G4: 392,
+                        A4: 440,
+                        C5: 523.25,
+                    };
+                    const seq = [
+                        [N.G3, 0.0, 0.18],
+                        [N.G3, 0.18, 0.18],
+                        [N.A4, 0.36, 0.3],
+                        [N.G4, 0.66, 0.3],
+                        [N.C5, 0.96, 0.3],
+                        [N.A4, 1.3, 0.45],
+                        [N.E4, 1.85, 0.12],
+                        [N.G4, 1.99, 0.12],
+                        [N.C5, 2.13, 0.3],
+                    ];
+                    seq.forEach(([f, s, d]) => tone(f, s, d));
+                }
+
+                /* ---------- Kontrol ---------- */
+                const screen = document.getElementById("screen");
+
+                function goParty() {
+                    mode = "party";
+                    t0 = performance.now();
+                    screen.classList.remove("is-party");
+                    void screen.offsetWidth; // reflow → ulangi animasi teks
+                    screen.classList.add("is-party");
+                    confetti = [];
+                    notes = [];
+                    spawnConfetti(true);
+                    playJingle();
+                }
+
+                function startBattle() {
+                    if (mode === "battle") return; // sedang bertarung
+                    if (mode === "party") {
+                        spawnConfetti(true);
+                        playJingle();
+                        return;
+                    } // sudah pesta → meriahkan lagi
+                    ensureAudio(); // siapkan audio saat klik
+                    mode = "battle";
+                    t0 = performance.now();
+                    screen.classList.remove("is-party");
+                    screen.classList.add("is-busy");
+                    bHits = 0;
+                    bFlashUntil = 0;
+                    bDeathSpawned = false;
+                    bPartyTriggered = false;
+                    confetti = [];
+                    notes = [];
+                    deathFx = [];
+                    sfx(440, 0.09, 0.12); // bunyi "mulai"
+                }
+
+                function reset() {
+                    mode = "idle";
+                    t0 = performance.now();
+                    screen.classList.remove("is-party", "is-busy");
+                    confetti = [];
+                    notes = [];
+                    deathFx = [];
+                    bHits = 0;
+                    bDeathSpawned = false;
+                    bPartyTriggered = false;
+                }
+
+                document
+                    .getElementById("btnB")
+                    .addEventListener("click", startBattle);
+                document
+                    .getElementById("btnA")
+                    .addEventListener("click", () => {
+                        reset();
+                        startBattle();
+                    });
+                document
+                    .getElementById("btnC")
+                    .addEventListener("click", reset);
+                screen.addEventListener("click", startBattle);
+
+                document.addEventListener("keydown", (e) => {
+                    if (e.key === "b" || e.key === "B") startBattle();
+                    if (e.key === "a" || e.key === "A") {
+                        reset();
+                        startBattle();
+                    }
+                    if (e.key === "c" || e.key === "C") reset();
+                });
+            })();
+        </script>
+    </body>
+</html>
